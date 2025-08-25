@@ -39,6 +39,8 @@ const (
 	InteropDelayFlagName                 = "interop.delay"
 	InteropL2ToL2CDMOverrideArtifactPath = "interop.l2tol2cdm.override"
 
+	CustomGasTokenEnabledFlagName = "custom-gas-token.enabled"
+
 	OdysseyEnabledFlagName = "odyssey.enabled"
 
 	DependencySetFlagName = "dependency.set"
@@ -118,6 +120,12 @@ func BaseCLIFlags(envPrefix string) []cli.Flag {
 			EnvVars: opservice.PrefixEnvVar(envPrefix, "INTEROP_DELAY"),
 		},
 		&cli.BoolFlag{
+			Name:    CustomGasTokenEnabledFlagName,
+			Value:   false, // disabled by default
+			Usage:   "Enable custom gas token features (LiquidityController & NativeAssetLiquidity)",
+			EnvVars: opservice.PrefixEnvVar(envPrefix, "CUSTOM_GAS_TOKEN_ENABLED"),
+		},
+		&cli.BoolFlag{
 			Name:    OdysseyEnabledFlagName,
 			Value:   false, // disabled by default
 			Usage:   "Enable odyssey experimental features",
@@ -167,8 +175,9 @@ type ForkCLIConfig struct {
 	Network      string
 	Chains       []string
 
-	InteropEnabled bool
-	OdysseyEnabled bool
+	InteropEnabled        bool
+	CustomGasTokenEnabled bool
+	OdysseyEnabled        bool
 }
 
 type CLIConfig struct {
@@ -182,6 +191,8 @@ type CLIConfig struct {
 	InteropAutoRelay                     bool
 	InteropDelay                         uint64
 	InteropL2ToL2CDMOverrideArtifactPath string
+
+	CustomGasTokenEnabled bool
 
 	OdysseyEnabled bool
 
@@ -212,7 +223,8 @@ func ReadCLIConfig(ctx *cli.Context) (*CLIConfig, error) {
 
 		LogsDirectory: ctx.String(LogsDirectoryFlagName),
 
-		OdysseyEnabled: ctx.Bool(OdysseyEnabledFlagName),
+		CustomGasTokenEnabled: ctx.Bool(CustomGasTokenEnabledFlagName),
+		OdysseyEnabled:        ctx.Bool(OdysseyEnabledFlagName),
 
 		DependencySet: nil, // nil means no flag provided
 	}
@@ -223,8 +235,9 @@ func ReadCLIConfig(ctx *cli.Context) (*CLIConfig, error) {
 			Network:      ctx.String(NetworkFlagName),
 			Chains:       ctx.StringSlice(ChainsFlagName),
 
-			InteropEnabled: ctx.Bool(InteropEnabledFlagName),
-			OdysseyEnabled: ctx.Bool(OdysseyEnabledFlagName),
+			InteropEnabled:        ctx.Bool(InteropEnabledFlagName),
+			CustomGasTokenEnabled: ctx.Bool(CustomGasTokenEnabledFlagName),
+			OdysseyEnabled:        ctx.Bool(OdysseyEnabledFlagName),
 		}
 	}
 

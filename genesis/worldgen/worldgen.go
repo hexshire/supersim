@@ -28,6 +28,10 @@ var defaultRecipe = interopgen.InteropDevRecipe{
 }
 
 func GenerateWorld(ctx context.Context, logger log.Logger, monorepoArtifacts *foundry.ArtifactsFS, peripheryArtifacts *foundry.ArtifactsFS) (*interopgen.WorldDeployment, *interopgen.WorldOutput, error) {
+	return GenerateWorldWithConfig(ctx, logger, monorepoArtifacts, peripheryArtifacts, nil)
+}
+
+func GenerateWorldWithConfig(ctx context.Context, logger log.Logger, monorepoArtifacts *foundry.ArtifactsFS, peripheryArtifacts *foundry.ArtifactsFS, config *CLIConfig) (*interopgen.WorldDeployment, *interopgen.WorldOutput, error) {
 	// Initialize dev keys
 	hdWallet, err := devkeys.NewMnemonicDevKeys(devkeys.TestMnemonic)
 	if err != nil {
@@ -38,6 +42,11 @@ func GenerateWorld(ctx context.Context, logger log.Logger, monorepoArtifacts *fo
 	cfg, err := defaultRecipe.Build(hdWallet)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to build world config from recipe: %w", err)
+	}
+
+	// Enable custom gas token for all L2s (required for custom Optimism branch)
+	for _, l2Cfg := range cfg.L2s {
+		l2Cfg.GasTokenDeployConfig.IsCustomGasToken = true
 	}
 
 	// Sanity check all L2s have consistent chain ID and attach to the same L1

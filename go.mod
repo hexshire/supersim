@@ -155,3 +155,5 @@ require (
 )
 
 replace github.com/ethereum/go-ethereum => github.com/ethereum-optimism/op-geth v1.101511.1-dev.1.0.20250608235258-6005dd53e1b5
+
+replace github.com/ethereum-optimism/optimism => ./optimism-submodule

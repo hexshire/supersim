@@ -70,7 +70,7 @@ func worldgenMain(ctx *cli.Context) error {
 		return fmt.Errorf("failed to download periphery artifacts: %w", err)
 	}
 
-	worldDeployment, worldOutput, err := worldgen.GenerateWorld(ctx.Context, logger, &foundry.ArtifactsFS{FS: monorepoArtifactsFS}, &foundry.ArtifactsFS{FS: peripheryArtifactsFS})
+	worldDeployment, worldOutput, err := worldgen.GenerateWorldWithConfig(ctx.Context, logger, &foundry.ArtifactsFS{FS: monorepoArtifactsFS}, &foundry.ArtifactsFS{FS: peripheryArtifactsFS}, cliConfig)
 
 	if err != nil {
 		return fmt.Errorf("failed to generate world: %w", err)

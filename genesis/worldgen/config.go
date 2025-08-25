@@ -20,9 +20,10 @@ func cwd() string {
 }
 
 const (
-	MonorepoArtifactsUrlFlag  = "monorepo-artifacts"
-	PeripheryArtifactsUrlFlag = "periphery-artifacts"
-	OutDirFlag                = "outdir"
+	MonorepoArtifactsUrlFlag    = "monorepo-artifacts"
+	PeripheryArtifactsUrlFlag   = "periphery-artifacts"
+	OutDirFlag                  = "outdir"
+	CustomGasTokenEnabledFlag   = "custom-gas-token-enabled"
 )
 
 func CLIFlags() []cli.Flag {
@@ -42,13 +43,19 @@ func CLIFlags() []cli.Flag {
 			Usage: "Directory to output the genesis files",
 			Value: cwd(),
 		},
+		&cli.BoolFlag{
+			Name:  CustomGasTokenEnabledFlag,
+			Usage: "Enable custom gas token features (LiquidityController & NativeAssetLiquidity)",
+			Value: false,
+		},
 	}
 }
 
 type CLIConfig struct {
-	MonorepoArtifactsURL  *url.URL
-	PeripheryArtifactsURL *url.URL
-	Outdir                string
+	MonorepoArtifactsURL    *url.URL
+	PeripheryArtifactsURL   *url.URL
+	Outdir                  string
+	CustomGasTokenEnabled   bool
 }
 
 func ParseCLIConfig(ctx *cli.Context) (*CLIConfig, error) {
@@ -67,9 +74,10 @@ func ParseCLIConfig(ctx *cli.Context) (*CLIConfig, error) {
 	}
 
 	return &CLIConfig{
-		MonorepoArtifactsURL:  monorepoArtifactsURL,
-		PeripheryArtifactsURL: peripheryArtifactsURL,
-		Outdir:                outDir,
+		MonorepoArtifactsURL:    monorepoArtifactsURL,
+		PeripheryArtifactsURL:   peripheryArtifactsURL,
+		Outdir:                  outDir,
+		CustomGasTokenEnabled:   ctx.Bool(CustomGasTokenEnabledFlag),
 	}, nil
 }
 

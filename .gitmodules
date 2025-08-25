@@ -10,3 +10,7 @@
 [submodule "contracts/lib/v4-periphery"]
 	path = contracts/lib/v4-periphery
 	url = https://github.com/uniswap/v4-periphery
+[submodule "optimism-submodule"]
+	path = optimism-submodule
+	url = https://github.com/defi-wonderland/optimism.git
+	branch = poc/custom-gas-token
